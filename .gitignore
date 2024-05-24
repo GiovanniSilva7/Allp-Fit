@@ -1,0 +1,51 @@
+# Arquivos binários e de objeto
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.winmd
+*.runtimeconfig.json
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+
+# Perfis de usuário do Visual Studio
+*.user
+*.suo
+.vs/
+*.userprefs
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+nuget.exe
+.nuget/
+
+# Arquivos de build
+build/
+BuildOutput/
+
+# Outros diretórios e arquivos
+Debug/
+Release/
+x64/
+x86/
+*.cache
+TestResults/
+*.VisualState.xml
+.idea/
+*.swp
+*ReSharper*
+*._ReSharper*
+*.DotSettings.user
+
+# Configurações locais
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
