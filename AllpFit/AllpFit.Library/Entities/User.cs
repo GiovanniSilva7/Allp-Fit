@@ -2,6 +2,7 @@
 using AllpFit.Library.Enumerators;
 using System.Diagnostics.Contracts;
 using AllpFit.Library.DomainEvents.Users.Contracts;
+using AllpFit.Library.Exceptions;
 
 namespace AllpFit.Library.Entities
 {
@@ -13,6 +14,9 @@ namespace AllpFit.Library.Entities
         public string Name { get; protected set; }
         public string Surname { get; protected set; }
         public string Email { get; protected set; }
+        public string CPF { get; protected set; }
+        public DateTime BirthDate { get; protected set; }
+        public string Nationality { get; protected set; }
         public bool IsAdmin { get; protected set; }
         public string Password { get; protected set; }
         public string PhoneNumber { get; protected set; }
@@ -20,10 +24,19 @@ namespace AllpFit.Library.Entities
         public User()
         { }
 
-        public static User CreateUser(string name, string surname, string email, bool isAdmin, string password, string phoneNumber) => new User(name, surname, email, isAdmin, password, phoneNumber);
+        public static User CreateUser(string name, string surname, string email, bool isAdmin, string password, string phoneNumber, string cpf, string nationality, DateTime birthDate) => new User(name, surname, email, isAdmin, password, phoneNumber, cpf, nationality, birthDate);
 
-        private User(string name, string surname, string email, bool isAdmin, string password, string phoneNumber)
+        private User(string name, string surname, string email, bool isAdmin, string password, string phoneNumber, string cpf, string nationality, DateTime birthDate)
         {
+            if (!ValidateHelper.ValidateCPF(cpf))
+                throw new DomainException("Formato do cpf é incorreto.");
+
+            if(!ValidateHelper.ValidateEmail(email))
+                throw new DomainException("Formato do email é incorreto.");
+
+            if(!ValidateHelper.ValidatePhoneNumber(phoneNumber))
+                throw new DomainException("Formato do telefone é incorreto.");
+
             IdUser = Guid.NewGuid();
             Name = name;
             Surname = surname;
@@ -31,20 +44,30 @@ namespace AllpFit.Library.Entities
             IsAdmin = isAdmin;
             Password = PasswordHelper.HashPassword(password);
             PhoneNumber = phoneNumber;
-            InsertDate = DateTime.Now;
+            Nationality = nationality;
+            CPF = cpf;
+            BirthDate = DateTimeHelper.DateTimeFromBrazil(birthDate);
+            InsertDate = DateTime.Now.Brazil();
             IdStatus = (byte)Status.Active;
         }
 
-        public void UpdateUser(string name, string surname, string email, bool isAdmin, string password, string phoneNumber)
+        public void UpdateUser(string name, string surname, string email, string phoneNumber, string nationality, DateTime? birthDate)
         {
             Name = name;
             Surname = surname;
             Email = email;
-            IsAdmin = isAdmin;
-            Password = password;
             PhoneNumber = phoneNumber;
-            UpdatedDate = DateTime.Now;
+            BirthDate = DateTimeHelper.DateTimeFromBrazil(birthDate);
+            Nationality = nationality;
+            UpdatedDate = DateTime.Now.Brazil();
         }
+
+        public void UpdatePassword(string password)
+        {
+            Password = PasswordHelper.HashPassword(password);
+            UpdatedDate = DateTime.Now.Brazil();
+        }
+
         public void DeleteUser()
         {
             if (IdStatus == (byte)Status.Deleted)

@@ -1,3 +1,4 @@
+using AllpFit.Impl.Configuration;
 using AllpFit.Infra.Context;
 using AllpFit.Infra.Interfaces;
 using AllpFit.Infra.Interfaces.Contracts;
@@ -10,6 +11,7 @@ using AllpFitApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-                         new MySqlServerVersion(new Version(8, 0, 21))));
+                         new MySqlServerVersion(new Version(8, 4, 0))));
 
 #endregion
 
@@ -54,14 +56,18 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserQueries, UserQueries>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 #endregion
 
-
+#region Services    
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+#endregion
 
 var app = builder.Build();
 
@@ -71,6 +77,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

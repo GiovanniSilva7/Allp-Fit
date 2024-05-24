@@ -6,20 +6,36 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllpFit.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class UsersAndContracts_NotFinished : Migration
+    public partial class Migration_AddColumnsAndProperties : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "users");
-
             migrationBuilder.AlterDatabase()
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Plans",
+                columns: table => new
+                {
+                    IdPlan = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    PlanName = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Value = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IdStatus = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    InsertDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plans", x => x.IdPlan);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "users",
-                schema: "users",
                 columns: table => new
                 {
                     IdUser = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -29,7 +45,12 @@ namespace AllpFit.Infra.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsAdmin = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CPF = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BirthDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Nationality = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "Brasileiro(a)")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsAdmin = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Password = table.Column<string>(type: "varchar(400)", maxLength: 400, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhoneNumber = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
@@ -46,7 +67,6 @@ namespace AllpFit.Infra.Migrations
 
             migrationBuilder.CreateTable(
                 name: "contracts",
-                schema: "users",
                 columns: table => new
                 {
                     IdContract = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -56,6 +76,7 @@ namespace AllpFit.Infra.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IdStatus = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     IdUser = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    IdPlan = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     InsertDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -63,9 +84,14 @@ namespace AllpFit.Infra.Migrations
                 {
                     table.PrimaryKey("PK_contracts", x => x.IdContract);
                     table.ForeignKey(
+                        name: "FK_contracts_Plans_IdPlan",
+                        column: x => x.IdPlan,
+                        principalTable: "Plans",
+                        principalColumn: "IdPlan",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_contracts_users_IdUser",
                         column: x => x.IdUser,
-                        principalSchema: "users",
                         principalTable: "users",
                         principalColumn: "IdUser",
                         onDelete: ReferentialAction.Restrict);
@@ -73,8 +99,12 @@ namespace AllpFit.Infra.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_contracts_IdPlan",
+                table: "contracts",
+                column: "IdPlan");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_contracts_IdUser",
-                schema: "users",
                 table: "contracts",
                 column: "IdUser",
                 unique: true);
@@ -84,12 +114,13 @@ namespace AllpFit.Infra.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "contracts",
-                schema: "users");
+                name: "contracts");
 
             migrationBuilder.DropTable(
-                name: "users",
-                schema: "users");
+                name: "Plans");
+
+            migrationBuilder.DropTable(
+                name: "users");
         }
     }
 }

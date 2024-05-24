@@ -2,10 +2,9 @@
 {
     public enum Status
     {
+        Deleted = 0,
         Active = 1,
-        Inactive = 2,
-        Deleted = 3,
-        PendingValidation = 4,
-        PendingPayment = 5
+        PendingValidation = 2,
+        PendingPayment = 3
     }
 }

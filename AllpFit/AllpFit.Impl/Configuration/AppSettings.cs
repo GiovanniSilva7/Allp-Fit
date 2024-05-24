@@ -5,10 +5,10 @@ namespace AllpFit.Impl.Configuration
 {
     public class AppSettings
     {
-        public ConnectionStrings ConnectionString { get; set; }
+        public ConnectionString ConnectionStrings { get; set; }
         public Auth AuthSettings { get; set; }
 
-        public class ConnectionStrings
+        public class ConnectionString
         {
             public string DefaultConnection { get; set; }
         }

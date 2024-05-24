@@ -25,6 +25,7 @@ namespace AllpFit.Infra.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Plans> Plans { get; set; }
 
 
         #region UnitOfWork Methods
@@ -99,13 +100,16 @@ namespace AllpFit.Infra.Context
                 user.Property(u => u.Name).IsRequired().HasMaxLength(150);
                 user.Property(u => u.Surname).IsRequired().HasMaxLength(150);
                 user.Property(u => u.Email).IsRequired().HasMaxLength(200);
-                user.Property(u => u.IsAdmin).IsRequired();
+                user.Property(u => u.CPF).IsRequired().HasMaxLength(11);
+                user.Property(u => u.BirthDate).IsRequired();
+                user.Property(u => u.Nationality).HasDefaultValue("Brasileiro(a)").IsRequired().HasMaxLength(50);
+                user.Property(u => u.IsAdmin).HasDefaultValue(false).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(400);
                 user.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(20);
                 user.Property(u => u.IdStatus).IsRequired();
                 user.Property(u => u.InsertDate).IsRequired();
                 user.Property(u => u.UpdatedDate);
-                user.ToTable("users", nameof(Schemas.Users).ToLower());
+                user.ToTable("users");
             });
 
             #endregion
@@ -122,7 +126,22 @@ namespace AllpFit.Infra.Context
                 contract.Property(c => c.IdStatus).IsRequired();
                 contract.Property(c => c.InsertDate).IsRequired();
                 contract.Property(c => c.UpdatedDate);
-                contract.ToTable("contracts", nameof(Schemas.Users).ToLower());
+                contract.ToTable("contracts");
+            });
+
+            #endregion
+
+            #region Plans
+
+            modelBuilder.Entity<Plans>(plan => 
+            {
+                plan.HasKey(p => p.IdPlan);
+                plan.Property(p => p.PlanName).IsRequired().HasMaxLength(150);
+                plan.Property(p => p.Value).IsRequired();
+                plan.Property(p => p.Description).HasMaxLength(500);
+                plan.Property(p => p.IdStatus).IsRequired();
+                plan.Property(p => p.InsertDate).IsRequired();
+                plan.Property(p => p.UpdatedDate);
             });
 
             #endregion
@@ -141,6 +160,12 @@ namespace AllpFit.Infra.Context
                 .HasOne(c => c.User)
                 .WithOne(u => u.Contract)
                 .HasForeignKey<Contract>(c => c.IdUser)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Contract>()
+                .HasOne(c => c.Plan)
+                .WithMany(p => p.Contracts)
+                .HasForeignKey(c => c.IdPlan)
                 .OnDelete(DeleteBehavior.Restrict);
 
             #endregion

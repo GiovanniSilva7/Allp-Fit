@@ -1,5 +1,5 @@
 ﻿using AllpFit.Contracts.Commands.Users.Contracts;
-using AllpFit.Library.DomainEvents.User;
+using AllpFit.Library.DomainEvents.Users.Contracts;
 using MediatR;
 
 namespace AllpFit.Impl.DomainEventHandlers.Users.Contracts

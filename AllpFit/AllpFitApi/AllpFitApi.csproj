@@ -15,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
@@ -22,8 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AllpFit.Contracts\AllpFit.Contracts.csproj" />
     <ProjectReference Include="..\AllpFit.Impl\AllpFit.Impl.csproj" />
     <ProjectReference Include="..\AllpFit.Infra\AllpFit.Infra.csproj" />
+    <ProjectReference Include="..\AllpFit.Library\AllpFit.Library.csproj" />
   </ItemGroup>
 
 </Project>

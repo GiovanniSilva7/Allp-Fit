@@ -22,20 +22,21 @@ namespace AllpFitApi.Queries.UserContext
             SELECT 
                 u.IdUser,
                 u.Name,
+                u.Surname,
                 u.Email,
                 u.Password,
                 u.IsAdmin,
                 u.IdStatus,
                 u.InsertDate,
                 u.UpdatedDate
-            FROM dbo.users u
+            FROM users u
             WHERE u.Email = @Email AND u.IdStatus <> @StatusDeleted";
 
         #endregion
 
         public UserQueries(IOptions<AppSettings> options)
         {
-            _connectionString = options?.Value?.ConnectionString?.DefaultConnection ?? throw new ArgumentNullException(nameof(options));
+            _connectionString = options?.Value?.ConnectionStrings?.DefaultConnection ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task<UserViewModel> GetUserInfo(string email)

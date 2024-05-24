@@ -34,6 +34,9 @@ namespace AllpFit.Infra.Migrations
                     b.Property<byte>("IdContractType")
                         .HasColumnType("tinyint unsigned");
 
+                    b.Property<Guid>("IdPlan")
+                        .HasColumnType("char(36)");
+
                     b.Property<byte>("IdStatus")
                         .HasColumnType("tinyint unsigned");
 
@@ -54,10 +57,45 @@ namespace AllpFit.Infra.Migrations
 
                     b.HasKey("IdContract");
 
+                    b.HasIndex("IdPlan");
+
                     b.HasIndex("IdUser")
                         .IsUnique();
 
-                    b.ToTable("contracts", "users");
+                    b.ToTable("contracts", (string)null);
+                });
+
+            modelBuilder.Entity("AllpFit.Library.Entities.Plans", b =>
+                {
+                    b.Property<Guid>("IdPlan")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<byte>("IdStatus")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<DateTime>("InsertDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("IdPlan");
+
+                    b.ToTable("Plans");
                 });
 
             modelBuilder.Entity("AllpFit.Library.Entities.User", b =>
@@ -65,6 +103,14 @@ namespace AllpFit.Infra.Migrations
                     b.Property<Guid>("IdUser")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("varchar(11)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -78,12 +124,21 @@ namespace AllpFit.Infra.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsAdmin")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasDefaultValue("Brasileiro(a)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -105,11 +160,18 @@ namespace AllpFit.Infra.Migrations
 
                     b.HasKey("IdUser");
 
-                    b.ToTable("users", "users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("AllpFit.Library.Entities.Contract", b =>
                 {
+                    b.HasOne("AllpFit.Library.Entities.Plans", "Plan")
+                        .WithMany("Contracts")
+                        .HasForeignKey("IdPlan")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_contracts_Plans_IdPlan");
+
                     b.HasOne("AllpFit.Library.Entities.User", "User")
                         .WithOne("Contract")
                         .HasForeignKey("AllpFit.Library.Entities.Contract", "IdUser")
@@ -117,7 +179,14 @@ namespace AllpFit.Infra.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_contracts_users_IdUser");
 
+                    b.Navigation("Plan");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AllpFit.Library.Entities.Plans", b =>
+                {
+                    b.Navigation("Contracts");
                 });
 
             modelBuilder.Entity("AllpFit.Library.Entities.User", b =>

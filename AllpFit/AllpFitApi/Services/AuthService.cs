@@ -17,6 +17,6 @@ namespace AllpFitApi.Services
             _userQueries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
         }
 
-        public async Task<UserViewModel> GetUserInfo(string email) => await _userQueries.GetUserInfo(email);
+        public async Task<UserViewModel> GetUserInfoAsync(string email) => await _userQueries.GetUserInfo(email);
     }
 }

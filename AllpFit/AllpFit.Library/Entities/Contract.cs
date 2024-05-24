@@ -15,9 +15,13 @@ namespace AllpFit.Library.Entities
 
         #region Navigation Properties
 
-        [ForeignKey("User")]
+        [ForeignKey("IdUser")]
         public Guid IdUser { get; protected set; }
         public User User { get; protected set; }
+
+        [ForeignKey("Plan")]
+        public Guid IdPlan { get; protected set; }
+        public Plans Plan { get; protected set; }
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using AllpFit.Contracts.Commands.Users;
-using AllpFit.Infra.Repositories;
+using AllpFit.Infra.Interfaces;
 using AllpFit.Library.Entities;
+using AllpFit.Library.Helpers;
 using MediatR;
 
 namespace AllpFit.Impl.CommandHandlers.Users
@@ -26,7 +27,10 @@ namespace AllpFit.Impl.CommandHandlers.Users
             if (user)
                 return AddUserCommand.Response.AlreadyExists;
 
-            var newUser = User.CreateUser(request.Name, request.Surname, request.Email, request.IsAdmin, request.Password, request.PhoneNumber);
+            if(!ValidateHelper.ValidateCPF(request.CPF))
+                return AddUserCommand.Response.WrongFormatCPF;
+
+            var newUser = User.CreateUser(request.Name, request.Surname, request.Email, request.IsAdmin, request.Password, request.PhoneNumber, request.CPF, request.Nationality, request.BirthDate);
 
             await _userRepository.AddAsync(newUser);
             await _userRepository.UnitOfWork.SaveChangesAsync();

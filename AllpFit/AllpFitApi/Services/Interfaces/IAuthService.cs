@@ -4,6 +4,6 @@ namespace AllpFitApi.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<UserViewModel> GetUserInfo(string email);
+        Task<UserViewModel> GetUserInfoAsync(string email);
     }
 }

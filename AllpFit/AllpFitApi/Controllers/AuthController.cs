@@ -5,7 +5,6 @@ using AllpFitApi.Models.Request;
 using AllpFitApi.Models.Response;
 using AllpFitApi.Services.Interfaces;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -16,9 +15,8 @@ using System.Text;
 
 namespace AllpFitApi.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("{controller}")]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         #region read-only fields
@@ -26,6 +24,7 @@ namespace AllpFitApi.Controllers
         private readonly IAuthService _authService;
         private readonly AppSettings _settings;
         private readonly IMediator _mediator;
+        //TODO: Add Logger
 
         #endregion
 
@@ -42,7 +41,7 @@ namespace AllpFitApi.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var user = await _authService.GetUserInfo(model.Email);
+                var user = await _authService.GetUserInfoAsync(model.Email);
 
                 if (user is null || !PasswordHelper.VerifyPassword(model.Password, user.Password))
                     return BadRequest("Email e/ou Senha incorretos!");
@@ -58,7 +57,7 @@ namespace AllpFitApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var command = new AddUserCommand(model.Name, model.Surname, model.Email, model.Password, model.PhoneNumber);
+                var command = new AddUserCommand(model.Name, model.Surname, model.Email, model.Password, model.PhoneNumber, model.CPF, model.BirthDate, model.Nationality, model.IsAdmin.Value);
                 var result = await _mediator.Send(command);
 
                 switch (result)
@@ -69,6 +68,8 @@ namespace AllpFitApi.Controllers
                         return BadRequest("Usuário já cadastrado!");
                     case AddUserCommand.Response.Error:
                         return BadRequest("Erro ao cadastrar usuário!");
+                    case AddUserCommand.Response.WrongFormatCPF:
+                        return BadRequest("Formato de CPF incorreto!");
                     default:
                         return BadRequest("Erro ao cadastrar usuário!");
                 }
