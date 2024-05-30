@@ -2,8 +2,10 @@ using AllpFit.Impl.Configuration;
 using AllpFit.Infra.Context;
 using AllpFit.Infra.Interfaces;
 using AllpFit.Infra.Interfaces.Contracts;
+using AllpFit.Infra.Interfaces.Plans;
 using AllpFit.Infra.Repositories.Users;
 using AllpFit.Infra.Repositories.Users.Contracts;
+using AllpFit.Infra.Repositories.Users.Plans;
 using AllpFitApi.Queries.Interfaces;
 using AllpFitApi.Queries.UserContext;
 using AllpFitApi.Services;
@@ -56,6 +58,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserQueries, UserQueries>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IPlansRepository, PlansRepository>();
+builder.Services.AddScoped<IPlansQueries, PlansQueries>();
+builder.Services.AddScoped<IContractQueries, ContractQueries>();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 #endregion

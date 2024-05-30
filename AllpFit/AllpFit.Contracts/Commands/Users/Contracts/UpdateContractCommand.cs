@@ -20,6 +20,7 @@ namespace AllpFit.Contracts.Commands.Users.Contracts
         }
 
         public Guid IdUser { get; private set; }
+        public Guid IdPlan { get; private set; }
         public Contract Contract { get; set; }
 
     }

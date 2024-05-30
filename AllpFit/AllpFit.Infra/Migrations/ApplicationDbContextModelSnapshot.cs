@@ -31,11 +31,11 @@ namespace AllpFit.Infra.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<byte>("IdContractType")
-                        .HasColumnType("tinyint unsigned");
-
                     b.Property<Guid>("IdPlan")
                         .HasColumnType("char(36)");
+
+                    b.Property<byte>("IdRenewType")
+                        .HasColumnType("tinyint unsigned");
 
                     b.Property<byte>("IdStatus")
                         .HasColumnType("tinyint unsigned");
@@ -46,8 +46,17 @@ namespace AllpFit.Infra.Migrations
                     b.Property<DateTime>("InsertDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("NextRenewDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<bool>("RecurrentPayment")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("RenewedDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
@@ -76,6 +85,9 @@ namespace AllpFit.Infra.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
+                    b.Property<byte>("IdContractType")
+                        .HasColumnType("tinyint unsigned");
+
                     b.Property<byte>("IdStatus")
                         .HasColumnType("tinyint unsigned");
 
@@ -95,7 +107,7 @@ namespace AllpFit.Infra.Migrations
 
                     b.HasKey("IdPlan");
 
-                    b.ToTable("Plans");
+                    b.ToTable("plans", (string)null);
                 });
 
             modelBuilder.Entity("AllpFit.Library.Entities.User", b =>
@@ -170,7 +182,7 @@ namespace AllpFit.Infra.Migrations
                         .HasForeignKey("IdPlan")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_contracts_Plans_IdPlan");
+                        .HasConstraintName("FK_contracts_plans_IdPlan");
 
                     b.HasOne("AllpFit.Library.Entities.User", "User")
                         .WithOne("Contract")

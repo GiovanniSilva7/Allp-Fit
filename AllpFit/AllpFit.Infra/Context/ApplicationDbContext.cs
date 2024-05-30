@@ -119,11 +119,13 @@ namespace AllpFit.Infra.Context
             modelBuilder.Entity<Contract>(contract =>
             {
                 contract.HasKey(c => c.IdContract);
-                contract.Property(c => c.IdContractType).IsRequired();
                 contract.Property(c => c.Price).IsRequired();
                 contract.Property(c => c.StartDate).IsRequired();
                 contract.Property(c => c.EndDate).IsRequired();
                 contract.Property(c => c.IdStatus).IsRequired();
+                contract.Property(c => c.IdRenewType).IsRequired();
+                contract.Property(c => c.RenewedDate);
+                contract.Property(c => c.NextRenewDate);
                 contract.Property(c => c.InsertDate).IsRequired();
                 contract.Property(c => c.UpdatedDate);
                 contract.ToTable("contracts");
@@ -139,9 +141,11 @@ namespace AllpFit.Infra.Context
                 plan.Property(p => p.PlanName).IsRequired().HasMaxLength(150);
                 plan.Property(p => p.Value).IsRequired();
                 plan.Property(p => p.Description).HasMaxLength(500);
+                plan.Property(c => c.IdContractType).IsRequired();
                 plan.Property(p => p.IdStatus).IsRequired();
                 plan.Property(p => p.InsertDate).IsRequired();
                 plan.Property(p => p.UpdatedDate);
+                plan.ToTable("plans");
             });
 
             #endregion

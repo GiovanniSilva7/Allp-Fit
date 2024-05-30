@@ -7,11 +7,14 @@ namespace AllpFit.Library.Entities
     public class Contract : EntityBase
     {
         public Guid IdContract { get; protected set; }
-        public byte IdContractType { get; protected set; }
         public decimal Price { get; protected set; }
         public DateTime StartDate { get; protected set; }
         public DateTime EndDate { get; protected set; }
+        public DateTime RenewedDate { get; protected set; }
+        public DateTime NextRenewDate { get; protected set; }
+        public byte IdRenewType { get; protected set; }
         public byte IdStatus { get; protected set; }
+        public bool RecurrentPayment { get; protected set; } = false;
 
         #region Navigation Properties
 
@@ -28,25 +31,42 @@ namespace AllpFit.Library.Entities
         public Contract()
         { }
 
-        public static Contract CreateContract(ContractType contractType, decimal price, DateTime startDate, DateTime endDate) => new Contract(contractType, price, startDate, endDate);
+        public static Contract CreateContract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, byte idRenewType = (byte)RenewType.Monthly, bool recurrentPayment = false) => new Contract(idPlan, price, startDate, endDate, idRenewType, recurrentPayment);
 
-        private Contract(ContractType contractType, decimal price, DateTime startDate, DateTime endDate)
+        private Contract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, byte idRenewType, bool recurrentPayment = false)
         {
             IdContract = Guid.NewGuid();
-            IdContractType = (byte)contractType;
             Price = price;
             StartDate = startDate;
             EndDate = endDate;
+            IdPlan = idPlan;
+            RecurrentPayment = recurrentPayment;
             IdStatus = (byte)Status.Active;
+            IdRenewType = idRenewType;
+
+            switch (idRenewType)
+            {
+                case (byte)RenewType.Monthly:
+                    RenewedDate = StartDate.AddMonths(1);
+                    NextRenewDate = StartDate.AddMonths(2);
+                    break;
+
+                case (byte)RenewType.Yearly:
+                    RenewedDate = StartDate.AddYears(1);
+                    NextRenewDate = StartDate.AddYears(2);
+                    break;
+            }
+
             InsertDate = DateTime.Now;
         }
 
-        public void UpdateContract(ContractType contractType, decimal price, DateTime startDate, DateTime endDate)
+        public void UpdateContract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, bool recurrentPayment = false)
         {
-            IdContractType = (byte)contractType;
+            IdPlan = idPlan;
             Price = price;
             StartDate = startDate;
             EndDate = endDate;
+            RecurrentPayment = recurrentPayment;
             UpdatedDate = DateTime.Now;
         }
 
@@ -56,6 +76,12 @@ namespace AllpFit.Library.Entities
                 return;
 
             IdStatus = (byte)Status.Deleted;
+            UpdatedDate = DateTime.Now;
+        }
+
+        public void DeactivateRecurrentPayment()
+        {
+            RecurrentPayment = false;
             UpdatedDate = DateTime.Now;
         }
     }

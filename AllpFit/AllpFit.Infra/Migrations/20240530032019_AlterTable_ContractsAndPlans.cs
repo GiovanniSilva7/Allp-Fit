@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AllpFit.Infra.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_AddColumnsAndProperties : Migration
+    public partial class AlterTable_ContractsAndPlans : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace AllpFit.Infra.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Plans",
+                name: "plans",
                 columns: table => new
                 {
                     IdPlan = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -25,12 +25,13 @@ namespace AllpFit.Infra.Migrations
                     Description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IdStatus = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    IdContractType = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     InsertDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Plans", x => x.IdPlan);
+                    table.PrimaryKey("PK_plans", x => x.IdPlan);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -70,11 +71,14 @@ namespace AllpFit.Infra.Migrations
                 columns: table => new
                 {
                     IdContract = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    IdContractType = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    RenewedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    NextRenewDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    IdRenewType = table.Column<byte>(type: "tinyint unsigned", nullable: false),
                     IdStatus = table.Column<byte>(type: "tinyint unsigned", nullable: false),
+                    RecurrentPayment = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IdUser = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     IdPlan = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     InsertDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -84,9 +88,9 @@ namespace AllpFit.Infra.Migrations
                 {
                     table.PrimaryKey("PK_contracts", x => x.IdContract);
                     table.ForeignKey(
-                        name: "FK_contracts_Plans_IdPlan",
+                        name: "FK_contracts_plans_IdPlan",
                         column: x => x.IdPlan,
-                        principalTable: "Plans",
+                        principalTable: "plans",
                         principalColumn: "IdPlan",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -117,7 +121,7 @@ namespace AllpFit.Infra.Migrations
                 name: "contracts");
 
             migrationBuilder.DropTable(
-                name: "Plans");
+                name: "plans");
 
             migrationBuilder.DropTable(
                 name: "users");

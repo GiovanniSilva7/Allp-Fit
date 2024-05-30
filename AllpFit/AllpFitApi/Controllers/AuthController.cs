@@ -57,7 +57,7 @@ namespace AllpFitApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var command = new AddUserCommand(model.Name, model.Surname, model.Email, model.Password, model.PhoneNumber, model.CPF, model.BirthDate, model.Nationality, model.IsAdmin.Value);
+                var command = new AddUserCommand(model.Name, model.Surname, model.Email, model.Password, model.PhoneNumber, model.CPF, model.BirthDate, model.Nationality, model.IsAdmin);
                 var result = await _mediator.Send(command);
 
                 switch (result)

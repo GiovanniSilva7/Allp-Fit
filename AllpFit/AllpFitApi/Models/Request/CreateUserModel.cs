@@ -12,6 +12,6 @@ namespace AllpFitApi.Models.Request
         public string CPF { get; set; }
         public DateTime BirthDate { get; set; }
         public string Nationality { get; set; } = "Brasileiro(a)";
-        public bool? IsAdmin { get; set; } = false;
+        public bool IsAdmin { get; set; } = false;
     }
 }

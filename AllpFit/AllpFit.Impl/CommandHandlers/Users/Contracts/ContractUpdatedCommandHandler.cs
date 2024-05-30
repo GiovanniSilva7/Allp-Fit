@@ -28,7 +28,7 @@ namespace AllpFit.Impl.CommandHandlers.Users.Contracts
             if (contract == null)
                 return UpdateContractCommand.Response.NotFound;
 
-            contract.UpdateContract((ContractType)request.Contract.IdContractType, request.Contract.Price, request.Contract.StartDate, request.Contract.EndDate);
+            contract.UpdateContract(request.IdPlan, request.Contract.Price, request.Contract.StartDate, request.Contract.EndDate);
 
             await _contractRepository.UnitOfWork.SaveChangesAsync();
             return UpdateContractCommand.Response.Successfull;
