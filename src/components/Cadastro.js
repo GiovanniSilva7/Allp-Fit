@@ -1,45 +1,73 @@
 import React, { useState, useEffect } from "react";
 import '../css/Cadastro.css';
-import axios from 'axios';
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
-import { baseUrl } from "./UrlPath/ApiPath";
+import axios from "axios";
+import NationalitySelect from "./utils/fields/nacionalitySelect";
+import { Nacionality } from "../Helpers/nacionalityHelper";
+import DDDSelect from "./utils/fields/DDDSelect";
+import { DDDs } from "../Helpers/dddHelper";
+import PlanModal from "./utils/modals/PlanModal";
 
 const Cadastro = () => {
     const [contractValue, setContractValue] = useState(null);
     const [anualValue, setanualValue] = useState(null);
     const [totalValue, settotalValue] = useState(null);
-    const [ddds, setDdds] = useState([]);
-    const [selectedDdd, setSelectedDdd] = useState('');
-    const [country, setCountry] = useState([]);
-    const [selectedCountry, setSelectedCountry] = useState('');
 
-    useEffect(() => {
-        const fetchData = async() => {
-            try
-            {
-                const response = await axios.get(baseUrl + 'plans');
-                const data = response.data;
-                setContractValue(data.contractValue);
-                setanualValue(data.anualValue);
-                settotalValue(data.totalValue);
-                setDdds(data.ddds);
-                setCountry(data.country);
-            }catch(error){
-               console.error('Erro, api nao encontrada') 
-            }
+    // useEffect(() => {
+    //     const fetchData = async() => {
+    //         try
+    //         {
+    //             const response = await axios.get(baseUrl + 'plans');
+    //             const data = response.data;
+    //             setContractValue(data.contractValue);
+    //             setanualValue(data.anualValue);
+    //             settotalValue(data.totalValue);
+    //             setDdds(data.ddds);
+    //             setCountry(data.country);
+    //         }catch(error){
+    //            console.error('Erro, api nao encontrada') 
+    //         }
 
-        };
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []); Não faz tanto sentido ter isso, pois tem coisas que é melhor serem tratadas no front-end
 
-    const handleCountryChange = (event) =>{
-        selectedCountry(event.target.value)
+    
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [nacionality, setNacionality] = useState(Nacionality.brasileiro);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [selectedDdds, setDdds] = useState(DDDs[11]);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState(null);
+
+    useEffect(() => {}, [])
+
+    const handleChangeNacionality = (event) => {
+        setNacionality(event.target.value)
     }
 
     const handelDdsChange = (event) => {
-        setSelectedDdd(event.target.value)
+        setDdds(event.target.value)
     }
+
+    const handleOpenModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+    };
+  
+    const handleSelectPlan = (plan) => {
+      setSelectedPlan(plan);
+    };
+
   return (
     <div className="container">
       <header className="header">
@@ -51,84 +79,56 @@ const Cadastro = () => {
         <div className="form-container">
           <h2 className="form-title">Cadastro</h2>
           <p className="form-subtitle">
-            Já tem cadastro? <a href="Login.js" className="login-link">Clique aqui</a> para fazer o login.
+          Já tem cadastro? <a href="Login" className="login-link">Clique aqui</a> para fazer o login.
           </p>
           <form className="form">
             <div className="form-group">
               <label className="form-label">Nome*</label>
-              <input type="text" className="input-field"/>
+              <input type="text" onChange={(e) => setName(e.target.value)} className="input-field"/>
             </div>
             <div className="form-group">
               <label className="form-label">Sobrenome*</label>
-              <input type="text" className="input-field"/>
+              <input type="text" onChange={(e) => setSurname(e.target.value)} className="input-field"/>
             </div>
             <div className="form-group">
               <label className="form-label">E-mail*</label>
-              <input type="email" className="input-field"/>
+              <input type="email" onChange={(e) => setEmail(e.target.value)} className="input-field"/>
             </div>
             <div className="form-group">
               <label className="form-label">CPF*</label>
-              <input type="text" className="input-field"/>
+              <input type="text" onChange={(e) => setCpf(e.target.value)} className="input-field"/>
             </div>
             <div className="form-group">
               <label className="form-label">Data de nascimento*</label>
-              <input type="date" className="input-field"/>
+              <input type="date" onChange={(e) => setBirthDate(e.target.value)} className="input-field"/>
             </div>
             <div className="form-group">
               <label className="form-label">Nacionalidade*</label>
-              <select className="input-field" value={selectedCountry} onChange={handleCountryChange}>
-                  {
-                    country.length === 0 
-                    ? (
-                      <option>Carregando...</option>
-                    ) 
-                    : (country.map((country) => {
-                      <option key={country} value={country}>{country}</option>
-                    } 
-                ))};
-              </select>
+              <NationalitySelect selectedNationality={nacionality} onChange={handleChangeNacionality} />
             </div>
             <div className="form-group">
               <label className="form-label">DDI*</label>
               <div className="ddi-group">
-                <select className="ddi-select" value={selectedDdd} onChange={handelDdsChange}  > 
-                {
-                  ddds.length === 0 
-                  ? (
-                      <option>Carregando</option>
-                  ) 
-                  : (
-                      ddds.map((ddd) => {
-                          <option key={ddd} value={ddd}> +{ddd}</option>
-                      })
-                  )
-                };   
-                </select>
+                <DDDSelect selectedDDD={selectedDdds} onChange={handelDdsChange} />
                 <input type="text" className="input-field"/>
               </div>
-            </div>
-            <div className="form-group gender-group">
-              <label className="form-label">Gênero</label>
-              <label className="gender-option">
-                <input type="radio" name="gender" className="form-radio"/>
-                <span>Masculino</span>
-              </label>
-              <label className="gender-option">
-                <input type="radio" name="gender" className="form-radio"/>
-                <span>Feminino</span>
-              </label>
-              <label className="gender-option">
-                <input type="radio" name="gender" className="form-radio"/>
-                <span>Outro</span>
-              </label>
             </div>
           </form>
         </div>
         <div className="details-container">
           <h2 className="details-title">ALLP PLUS</h2>
           <div className="details-subtitle">
-            Vigência: <span className="details-bold">recorrente mensal</span>
-            <a href="#" className="details-link">Ver detalhes</a>
+         {selectedPlan && (
+            <p>
+              Plano Selectionado: {selectedPlan.name} - ${selectedPlan.price}
+            </p>
+          )}
+          <PlanModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onSelectPlan={handleSelectPlan}
+          />
+            <a href="#" onClick={handleOpenModal} className="details-link">Ver detalhes</a>
           </div>
           <div className="voucher-section">
             <label className="form-label">Código do voucher</label>

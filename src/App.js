@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Cadastro from '../src/components/Cadastro';
 import Planos from '../src/components/Planos';
 import Checkout from '../src/components/Checkout';
+import DoLogin from '../src/components/Login';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/checkout" element={<Checkout />} />
-        {/* /*<Route path="/login" element={<Login />} /> */}
+        <Route path="/login" element={<DoLogin />} />
       </Routes>
     </Router>
   );

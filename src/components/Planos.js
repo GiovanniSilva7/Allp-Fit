@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 function Planos() {
@@ -5,7 +6,7 @@ function Planos() {
 
   useEffect(() => {
     // Fetch planos data from backend
-    fetch('/api/planos')
+    axios.get('plan')
       .then(response => response.json())
       .then(data => setPlanos(data));
   }, []);

@@ -11,7 +11,7 @@ const Checkout = () => {
         const fetchData = async() => {
             try
             {
-                const response = await axios.get('API');
+                const response = await axios.get('checkout');
                 const data = response.data;
                 setContractValue(data.contractValue);
                 setanualValue(data.anualValue);
