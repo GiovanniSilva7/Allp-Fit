@@ -11,14 +11,17 @@ namespace AllpFit.Library.Entities
         public string Description { get; protected set; }
         public byte IdStatus { get; protected set; }
         public byte IdContractType { get; protected set; }
-        public List<Contract> Contracts { get; protected set; }
 
-        protected Plans()
+        #region Navigation
+        public List<Contract> Contracts { get; protected set; }
+        #endregion
+
+        public Plans()
         {}
 
         public static Plans CreatePlan(string planName, decimal value, string description, byte idContractType) => new Plans(planName, value, description, idContractType);
 
-        public Plans(string planName, decimal value, string description, byte idContractType = (byte)ContractType.Basic)
+        private Plans(string planName, decimal value, string description, byte idContractType = (byte)ContractType.Basic)
         {
             IdPlan = Guid.NewGuid();
             PlanName = planName;

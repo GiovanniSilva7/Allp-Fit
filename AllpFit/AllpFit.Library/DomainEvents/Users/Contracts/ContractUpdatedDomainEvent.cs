@@ -17,5 +17,7 @@ namespace AllpFit.Library.DomainEvents.Users.Contracts
             IdUser = idUser;
             Contract = updateContract;
         }
+
+        //TODO: Add Domain Event Handlers
     }
 }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AllpFit.Library.Helpers;
+using MediatR;
 using System.Text.Json.Serialization;
 
 namespace AllpFit.Library.DomainEvents
@@ -10,7 +11,7 @@ namespace AllpFit.Library.DomainEvents
         [JsonConstructor]
         public BaseDomainEvent()
         {
-            EventDate = DateTime.Now;
+            EventDate = DateTime.Now.Brazil();
         }
 
     }

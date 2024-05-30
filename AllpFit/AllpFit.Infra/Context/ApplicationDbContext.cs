@@ -119,7 +119,6 @@ namespace AllpFit.Infra.Context
             modelBuilder.Entity<Contract>(contract =>
             {
                 contract.HasKey(c => c.IdContract);
-                contract.Property(c => c.Price).IsRequired();
                 contract.Property(c => c.StartDate).IsRequired();
                 contract.Property(c => c.EndDate).IsRequired();
                 contract.Property(c => c.IdStatus).IsRequired();

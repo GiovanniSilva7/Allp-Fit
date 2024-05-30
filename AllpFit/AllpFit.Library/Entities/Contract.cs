@@ -1,4 +1,6 @@
-﻿using AllpFit.Library.Enumerators;
+﻿using AllpFit.Library.DomainEvents.Users.Contracts;
+using AllpFit.Library.Enumerators;
+using AllpFit.Library.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AllpFit.Library.Entities
@@ -7,7 +9,6 @@ namespace AllpFit.Library.Entities
     public class Contract : EntityBase
     {
         public Guid IdContract { get; protected set; }
-        public decimal Price { get; protected set; }
         public DateTime StartDate { get; protected set; }
         public DateTime EndDate { get; protected set; }
         public DateTime RenewedDate { get; protected set; }
@@ -31,14 +32,14 @@ namespace AllpFit.Library.Entities
         public Contract()
         { }
 
-        public static Contract CreateContract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, byte idRenewType = (byte)RenewType.Monthly, bool recurrentPayment = false) => new Contract(idPlan, price, startDate, endDate, idRenewType, recurrentPayment);
+        public static Contract CreateContract(Guid idPlan, Guid idUser, DateTime startDate, DateTime endDate, byte idRenewType = (byte)RenewType.Monthly, bool recurrentPayment = false) => new Contract(idPlan, idUser, startDate, endDate, idRenewType, recurrentPayment);
 
-        private Contract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, byte idRenewType, bool recurrentPayment = false)
+        private Contract(Guid idPlan, Guid idUser, DateTime startDate, DateTime endDate, byte idRenewType, bool recurrentPayment = false)
         {
             IdContract = Guid.NewGuid();
-            Price = price;
-            StartDate = startDate;
-            EndDate = endDate;
+            StartDate = DateTimeHelper.DateTimeFromBrazil(startDate);
+            EndDate = DateTimeHelper.DateTimeFromBrazil(endDate);
+            IdUser = idUser;
             IdPlan = idPlan;
             RecurrentPayment = recurrentPayment;
             IdStatus = (byte)Status.Active;
@@ -57,17 +58,18 @@ namespace AllpFit.Library.Entities
                     break;
             }
 
-            InsertDate = DateTime.Now;
+            InsertDate = DateTime.Now.Brazil();
+            SendDomainEvent(new ContractAddedDomainEvent(this));
         }
 
-        public void UpdateContract(Guid idPlan, decimal price, DateTime startDate, DateTime endDate, bool recurrentPayment = false)
+        public void UpdateContract(Guid idPlan, DateTime startDate, DateTime endDate, byte idRenewType, bool recurrentPayment = false)
         {
             IdPlan = idPlan;
-            Price = price;
-            StartDate = startDate;
-            EndDate = endDate;
+            StartDate = DateTimeHelper.DateTimeFromBrazil(startDate);
+            EndDate = DateTimeHelper.DateTimeFromBrazil(endDate);
+            IdRenewType = idRenewType;
             RecurrentPayment = recurrentPayment;
-            UpdatedDate = DateTime.Now;
+            UpdatedDate = DateTime.Now.Brazil();
         }
 
         public void DeleteContract()
@@ -76,13 +78,13 @@ namespace AllpFit.Library.Entities
                 return;
 
             IdStatus = (byte)Status.Deleted;
-            UpdatedDate = DateTime.Now;
+            UpdatedDate = DateTime.Now.Brazil();
         }
 
         public void DeactivateRecurrentPayment()
         {
             RecurrentPayment = false;
-            UpdatedDate = DateTime.Now;
+            UpdatedDate = DateTime.Now.Brazil();
         }
     }
 }

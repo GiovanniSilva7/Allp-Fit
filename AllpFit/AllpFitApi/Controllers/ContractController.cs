@@ -1,9 +1,12 @@
 ﻿using AllpFitApi.Queries.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AllpFitApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ContractController : ControllerBase
@@ -23,5 +26,16 @@ namespace AllpFitApi.Controllers
         }
 
         //TODO: Implementar métodos
+        public async Task<IActionResult> ListContracts()
+        {
+            var idUser = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("IdUser", StringComparison.Ordinal))?.Value);
+
+            if (idUser.Equals(Guid.Empty))
+                return BadRequest("Id do usuário inválido");
+
+            var result = await _contractQueries.ListContractsAsync(idUser);
+
+            return Ok(result);
+        }
     }
 }

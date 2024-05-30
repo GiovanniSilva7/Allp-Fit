@@ -44,7 +44,7 @@ namespace AllpFitApi.Controllers
                 var user = await _authService.GetUserInfoAsync(model.Email);
 
                 if (user is null || !PasswordHelper.VerifyPassword(model.Password, user.Password))
-                    return BadRequest("Email e/ou Senha incorretos!");
+                    return Unauthorized("Email e/ou Senha incorretos!");
 
                 return Ok(new { Token = GenerateToken(user) });
             }

@@ -15,15 +15,14 @@ namespace AllpFitApi.Queries.UserContext
         #region Query Constants
 
         private readonly string LIST_PLANS_QUERY = @"
-            SELECT
+            SELECT DISTINCT
                 IdPlan,
-                Name,
+                PlanName,
                 Description,
                 Value,
-                CreatedAt,
-                UpdatedAt
+                IdContractType
             FROM
-                Plans
+                plans
             WHERE
                 IdStatus = @StatusActive";
 

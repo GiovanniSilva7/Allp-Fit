@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AllpFit.Impl.CommandHandlers.Users.Contracts
+namespace AllpFit.Contracts.Commands.Users.Contracts
 {
     public class CreateContractCommand : IRequest<CreateContractCommand.Response>
     {
@@ -31,7 +31,7 @@ namespace AllpFit.Impl.CommandHandlers.Users.Contracts
         public byte IdRenewType { get; private set; }
         public bool RecurrentPayment { get; private set; }
 
-        public CreateContractCommand(Guid idUser, Guid idPlan, DateTime startDate, DateTime endDate, byte idRenewType = (byte)RenewType.Monthly, bool recurrentPayment = false)
+        public CreateContractCommand(Guid idUser, Guid idPlan, DateTime startDate, DateTime endDate, byte idRenewType = (byte)RenewType.Test, bool recurrentPayment = false)
         {
             IdUser = idUser;
             IdPlan = idPlan;

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace AllpFit.Impl.CommandHandlers.Users.Contracts
 {
-    public class ContractUpdatedCommandHandler : IRequestHandler<UpdateContractCommand, UpdateContractCommand.Response>
+    public class UpdateContractCommandHandler : IRequestHandler<UpdateContractCommand, UpdateContractCommand.Response>
     {
         #region Read-only fields
 
@@ -14,7 +14,7 @@ namespace AllpFit.Impl.CommandHandlers.Users.Contracts
 
         #endregion
 
-        public ContractUpdatedCommandHandler(IContractRepository contractRepository)
+        public UpdateContractCommandHandler(IContractRepository contractRepository)
         {
 
             _contractRepository = contractRepository ?? throw new ArgumentNullException(nameof(contractRepository));
@@ -28,7 +28,7 @@ namespace AllpFit.Impl.CommandHandlers.Users.Contracts
             if (contract == null)
                 return UpdateContractCommand.Response.NotFound;
 
-            contract.UpdateContract(request.IdPlan, request.Contract.Price, request.Contract.StartDate, request.Contract.EndDate);
+            contract.UpdateContract(request.IdPlan, request.StartDate, request.EndDate, request.IdRenewType, request.RecurrentPayment);
 
             await _contractRepository.UnitOfWork.SaveChangesAsync();
             return UpdateContractCommand.Response.Successfull;
