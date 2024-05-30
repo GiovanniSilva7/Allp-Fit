@@ -19,6 +19,7 @@ function Planos() {
           <button>Selecionar</button>
         </div>
       ))}
+      <h2>Planos</h2>
     </div>
   );
 }

@@ -12,7 +12,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/checkout" element={<Checkout />} />
-        
+        {/* /*<Route path="/login" element={<Login />} /> */}
       </Routes>
     </Router>
   );

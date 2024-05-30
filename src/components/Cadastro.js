@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../css/Cadastro.css';
 import axios from 'axios';
 import { setSelectionRange } from "@testing-library/user-event/dist/utils";
+import { baseUrl } from "./UrlPath/ApiPath";
 
 const Cadastro = () => {
     const [contractValue, setContractValue] = useState(null);
@@ -16,7 +17,7 @@ const Cadastro = () => {
         const fetchData = async() => {
             try
             {
-                const response = await axios.get('API');
+                const response = await axios.get(baseUrl + 'plans');
                 const data = response.data;
                 setContractValue(data.contractValue);
                 setanualValue(data.anualValue);
@@ -76,9 +77,14 @@ const Cadastro = () => {
             <div className="form-group">
               <label className="form-label">Nacionalidade*</label>
               <select className="input-field" value={selectedCountry} onChange={handleCountryChange}>
-                {country.length === 0 ? (
-                    <option>Carregando...</option>
-                ) : (country.map((country) => <option key={country} value={country}>{country}</option>
+                  {
+                    country.length === 0 
+                    ? (
+                      <option>Carregando...</option>
+                    ) 
+                    : (country.map((country) => {
+                      <option key={country} value={country}>{country}</option>
+                    } 
                 ))};
               </select>
             </div>
@@ -86,13 +92,17 @@ const Cadastro = () => {
               <label className="form-label">DDI*</label>
               <div className="ddi-group">
                 <select className="ddi-select" value={selectedDdd} onChange={handelDdsChange}  > 
-                {ddds.length === 0 ? (
-                <option>Carregando</option>
-                    ) : (
-                        ddds.map((ddd) => (
-                            <option key={ddd} value={ddd}>+{ddd}</option>
-                        ))
-                    )};   
+                {
+                  ddds.length === 0 
+                  ? (
+                      <option>Carregando</option>
+                  ) 
+                  : (
+                      ddds.map((ddd) => {
+                          <option key={ddd} value={ddd}> +{ddd}</option>
+                      })
+                  )
+                };   
                 </select>
                 <input type="text" className="input-field"/>
               </div>
