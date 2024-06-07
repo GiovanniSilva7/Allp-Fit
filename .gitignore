@@ -44,8 +44,11 @@ TestResults/
 *._ReSharper*
 *.DotSettings.user
 
-# Configurações locais
+# appsettings
 appsettings.json
 appsettings.Development.json
 appsettings.Production.json
-appsettings.Staging.json
+
+# Exemplo de arquivo
+!appsettings.json.example
+

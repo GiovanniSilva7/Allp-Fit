@@ -1,0 +1,13 @@
+// appsettings.json.example
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Your-Connection-String-Here"
+  },
+  "AppSettings": {
+    "AuthSettings": {
+      "Key": "JwtKey",
+      "Issuer": "JwtIssuer",
+      "Audience":  "JwtAudience"
+    }
+  }
+}
