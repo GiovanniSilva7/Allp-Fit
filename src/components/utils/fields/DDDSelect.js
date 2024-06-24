@@ -7,7 +7,7 @@ const DDDSelect = ({ selectedDDD, onChange }) => {
       <option value="" disabled>Selecione um DDD</option>
       {Object.entries(DDDs).map(([code, city]) => (
         <option key={code} value={code}>
-          {code} - {city}
+          {code}
         </option>
       ))}
     </select>
