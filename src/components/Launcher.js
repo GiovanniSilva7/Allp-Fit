@@ -1,16 +1,48 @@
-import React from 'react';
+import React,{useState, useEffect } from 'react';
 import '../css/Launcher.css';
 import headerLogo from '../img/header_logo.svg';
 import icon1 from '../img/sub-icones1.svg'
 import icon2 from '../img/sub-icones2.svg'
 import icon3 from '../img/sub-icones3.svg'
 import icon4 from '../img/sub-icones4.svg'
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-</style>
-
+import academy from '../Helpers/stateCode';
 
 const Launcher = () => {
+
+  const [academiaMaisProxima, setAcademiaMaisProxima] = useState(null)
+
+
+  function GetLocation(){
+    navigator.geolocation.getCurrentPosition(
+      position => {
+          let { latitude, longitude } = position.coords;
+          let menorDistancia = Infinity;
+          let academyNearby = null;
+
+          academy.forEach(academia => {
+            const rEarth = 6371;
+            const dLat = (academia.latitude - latitude) * (Math.PI / 180);
+            const dLon = (academia.longitude - longitude) * (Math.PI / 180);
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(latitude * (Math.PI / 180)) * Math.cos(academia.latitude * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);          
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            let distancia = rEarth * c; // Distância em km
+
+            if (distancia < menorDistancia) {
+              menorDistancia = distancia;
+              academyNearby = academia;
+            }
+        });
+
+          setAcademiaMaisProxima(academyNearby);
+      },
+      error => {
+          console.error("Erro ao obter a localização", error);
+      }
+  );
+  }
+
+  useEffect(() => { GetLocation()}, []);
+
   return (
     <div className="home-page">
          <header className="header">
@@ -19,7 +51,13 @@ const Launcher = () => {
     </div>
     </header>
       <div className="main">
-        <div className="main-text">seja bem-vindo (a)</div>
+          {
+            academiaMaisProxima ? (
+              <div className="main-text">Seja bem-vindo (a) Unidade {academiaMaisProxima.nome} </div>
+            ) : (
+              <div className="main-text">Seja bem-vindo (a) AllpFit </div>
+            )
+          }
         <div className="sub-text">A ÚNICA ACADEMIA COM CONCEITO TOP <b>TO ALL</b> DO BRASIL!</div>
         <div className="icons">
           <div className="icon">

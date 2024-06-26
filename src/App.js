@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Launcher from '../src/components/Launcher';
 import Home from '../src/components/Home';
@@ -20,11 +20,15 @@ function App() {
     "Aulas presenciais e online",
     "Treine em casa com Allpfit"
   ];
+
+  useEffect(() => {
+    document.title = 'Allp Fit'
+  }, [])
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/launcher" element={<Launcher mainText = {mainText} subText={subText} iconTexts={iconTexts}/>} />
         <Route 
           path="/home" 
           element={<Home items={items} />}  // Passando props usando renderização inline

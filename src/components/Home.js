@@ -1,21 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import Launcher from './Launcher'; // Ajuste o caminho conforme necessário
 import '../css/Home.css';
-import icon1 from "../img/icones-tela1.svg";
-import icon2 from "../img/cadastro1.png";
-import redirectLocation from '../components/utils/fields/redirectLocation'
 import { useNavigate } from "react-router-dom";
+import academy from '../Helpers/stateCode';
 
 const Home = ({ items }) => {
   const [isScreensaverActive, setScreensaverActive] = useState(false);
+  const [academiaMaisProxima, setAcademiaMaisProxima] = useState(null)
+
+
+  function GetLocation(){
+    navigator.geolocation.getCurrentPosition(
+      position => {
+          let { latitude, longitude } = position.coords;
+          let menorDistancia = Infinity;
+          let academyNearby = null;
+
+          academy.forEach(academia => {
+            const rEarth = 6371;
+            const dLat = (academia.latitude - latitude) * (Math.PI / 180);
+            const dLon = (academia.longitude - longitude) * (Math.PI / 180);
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(latitude * (Math.PI / 180)) * Math.cos(academia.latitude * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);          
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            let distancia = rEarth * c; // Distância em km
+
+            if (distancia < menorDistancia) {
+              menorDistancia = distancia;
+              academyNearby = academia;
+            }
+        });
+
+          setAcademiaMaisProxima(academyNearby);
+      },
+      error => {
+          console.error("Erro ao obter a localização", error);
+      }
+  );
+  }
 
   useEffect(() => {
     let timeout;
+    document.title = 'Allp Fit'
+    GetLocation();
 
     const resetTimer = () => {
       clearTimeout(timeout);
       setScreensaverActive(false);
-      timeout = setTimeout(() => setScreensaverActive(true), 10000000000000);
+      timeout = setTimeout(() => setScreensaverActive(true), 720000); //720000 ms = 10 minutos
     };
 
     const handleUserActivity = () => resetTimer();
@@ -37,15 +68,7 @@ const Home = ({ items }) => {
     const handleBack= () => {
         navigate('/planos');
     };
-  /*const handleLocation = (icon) => {
-    
 
-    if(icon === icon2){
-      redirectLocation();
-    }else if (icon === icon1){
-      
-    }
-  };*/
 
   return isScreensaverActive ? (
     <Launcher />
@@ -58,18 +81,25 @@ const Home = ({ items }) => {
       </header>
       <div className="main">
         <div className='container'>
-        <div className="main-text">Seja bem-vindo (a)</div>
-        <div className="sub-text">Escolha umas das opções abaixo para iniciar</div>
-        <div className="items">
-          {items && items.map((item, index) => (
-            <div className="item" key={index} onClick={() => handleBack(item.icon)}>
-              <span>{item.text}</span>
-              <div className="item-icon-container" >
-                <img src={item.icon} alt={item.text} className="item-icon" />
+          {
+            academiaMaisProxima ? (
+              <div className="main-text">Seja bem-vindo (a) Unidade {academiaMaisProxima.nome} </div>
+            ) : (
+              <div className="main-text">Seja bem-vindo (a) AllpFit </div>
+            )
+          }
+          
+          <div className="sub-text">Escolha umas das opções abaixo para iniciar</div>
+          <div className="items">
+            {items && items.map((item, index) => (
+              <div className="item" key={index} onClick={() => handleBack(item.icon)}>
+                <span>{item.text}</span>
+                <div className="item-icon-container" >
+                  <img src={item.icon} alt={item.text} className="item-icon" />
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
