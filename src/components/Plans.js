@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Plans.css'; // Importe o arquivo CSS
-import academy from '../Helpers/stateCode';
-import { Helmet } from 'react-helmet';
+import academy from '../helpers/stateCode';
+
 
 const Plans = () => {
   const navigate = useNavigate();

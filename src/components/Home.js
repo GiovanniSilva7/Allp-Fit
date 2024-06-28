@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Launcher from './Launcher'; // Ajuste o caminho conforme necessário
 import '../css/Home.css';
 import { useNavigate } from "react-router-dom";
-import academy from '../Helpers/stateCode';
+import academy from '../helpers/stateCode';
 
 const Home = ({ items }) => {
   const [isScreensaverActive, setScreensaverActive] = useState(false);
@@ -92,7 +92,7 @@ const Home = ({ items }) => {
           <div className="sub-text">Escolha umas das opções abaixo para iniciar</div>
           <div className="items">
             {items && items.map((item, index) => (
-              <div className="item" key={index} onClick={() => handleBack(item.icon)}>
+              <div className="item" key={index} onClick={() => handleBack(item)}>
                 <span>{item.text}</span>
                 <div className="item-icon-container" >
                   <img src={item.icon} alt={item.text} className="item-icon" />

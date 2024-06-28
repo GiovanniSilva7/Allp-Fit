@@ -5,7 +5,7 @@ import icon1 from '../img/sub-icones1.svg'
 import icon2 from '../img/sub-icones2.svg'
 import icon3 from '../img/sub-icones3.svg'
 import icon4 from '../img/sub-icones4.svg'
-import academy from '../Helpers/stateCode';
+import academy from '../helpers/stateCode';
 
 const Launcher = () => {
 

@@ -1,14 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body {
+html, body {
+  height: 100%; /* Certifique-se de que o body e o html tenham altura de 100% */
+  margin: 0;
   font-family: 'Kanit', sans-serif;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/bg_allpimg.png'); 
   color: white;
+  background-size: cover;
+  background-position: center; 
   text-align: center;
 }
 
 .header {
   background-color: #4B0082; /* Cor roxa */
-  padding: 10px 0;
+  margin-top: -5px;
 }
 
 .header img {
@@ -20,29 +25,29 @@ body {
   background-size: cover; 
   background-position: center; 
   width: 100%;
-  height: 100vh; 
+  height: auto; 
 }
 
-.container{
+.container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
 }
 
 .main-text {
   font-size: 4.5rem;
   font-weight: bold;
   color: #ff6600;
-  margin: 0;
+  margin-top: -80px;
 }
 
 .sub-text {
   font-size: 2.8rem;
   font-weight: bold;
   color: white;
+  margin-top: -60px;
 }
 
 .items {
@@ -51,8 +56,8 @@ body {
   justify-content: space-around;
   align-items: flex-end;
   width: 50%;
-  height: 100%;
-  margin-bottom: 30px;
+  height: auto; /* Use auto ao invés de 100% */
+  margin-top: 300px;
 }
 
 .item {
@@ -86,27 +91,4 @@ body {
   height: 150px;
   width: 150px;
   color: #4B0082;
-}
-@media screen and (min-width: 1920px) and (min-height: 1080px) {
-  .main-text {
-    font-size: 6rem; 
-  }
-
-  .sub-text {
-    font-size: 3.5rem; 
-  }
-
-  .icons {
-    width: 30%; 
-    bottom: 2%;
-    gap: 60px;
-  }
-
-  .icon img {
-    height: 100px; 
-  }
-
-  .icon p {
-    font-size: 2rem; 
-  }
 }
